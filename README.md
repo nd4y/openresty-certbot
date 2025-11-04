@@ -190,7 +190,7 @@ certificates:
     validation: http
     staging: true
     email: le@example.org
-    post_hook: reload_Openresty.sh
+    post_hook: reload_openresty.sh
 
   - name: 22-23.le-testing.example.org
     domains:
@@ -201,7 +201,7 @@ certificates:
     credentials_file: /certbot/credentials/cloudflare.ini
     staging: true
     email: le@example.org
-    post_hook: reload_Openresty.sh
+    post_hook: reload_openresty.sh
     extra_args: "--key-type ecdsa --elliptic-curve secp384r1"
 ```
 
