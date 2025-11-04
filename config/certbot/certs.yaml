@@ -1,0 +1,21 @@
+certificates:
+  - name: 21.le-testing.example.org
+    domains:
+      - 21.le-testing.example.org
+    validation: dns
+    dns_plugin: cloudflare
+    credentials_file: /certbot/credentials/cloudflare.ini
+    staging: true
+    email: le@example.org
+    post_hook: reload_openresty.sh
+
+  - name: 22-23.le-testing.example.org
+    domains:
+      - 22.le-testing.example.org
+      - 23.le-testing.example.org
+    validation: dns
+    dns_plugin: cloudflare
+    credentials_file: /certbot/credentials/cloudflare.ini
+    staging: true
+    email: le@example.org
+    post_hook: reload_openresty.sh

@@ -1,0 +1,42 @@
+services:
+  openresty:
+    build:
+      context: ./build/openresty
+      dockerfile: Dockerfile
+    container_name: openresty
+    ports:
+      - "80:80" # HTTP
+      - "443:443" # HTTPS
+      - "443:443/udp" # QUIC
+      #- "8081:8081" # Certbot Reload Endpoint
+    volumes:
+      - ${PWD}/config/openresty/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ${PWD}/config/openresty/conf.d:/usr/local/openresty/nginx/conf/conf.d:ro
+      - ${PWD}/config/openresty/sites-enabled:/usr/local/openresty/nginx/conf/sites-enabled:ro
+      - ${PWD}/certificates:/etc/letsencrypt:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8082/_health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  certbot:
+    build:
+      context: ./build/certbot
+      dockerfile: Dockerfile
+    container_name: certbot
+    volumes:
+      - ${PWD}/certificates:/etc/letsencrypt
+      - ${PWD}/config/certbot:/certbot
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f certbot_agent.sh >/dev/null || exit 1"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+
+
